@@ -1,0 +1,29 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile
+        run: |
+          python -m py_compile skills/transweb-ai/scripts/transweb_ai.py
+          python -m py_compile skills/transweb-create/scripts/transweb_create.py
+      - name: Self-test
+        run: |
+          python skills/transweb-ai/scripts/transweb_ai.py selftest --json
+          python skills/transweb-create/scripts/transweb_create.py selftest --json
+      - name: Unit tests
+        run: |
+          python -m unittest discover -s skills/transweb-ai/tests -v
+          python -m unittest discover -s skills/transweb-create/tests -v

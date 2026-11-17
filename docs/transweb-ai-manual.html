@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>transweb-ai 使用说明书 · 不用记命令</title>
+<style>
+  :root{
+    --ink:#1f2933;
+    --muted:#5f6b7a;
+    --line:#dfe3e8;
+    --soft:#f5f7f9;
+    --accent:#0f766e;
+    --accent-dark:#115e59;
+    --accent-soft:#ecfdf5;
+    --warn:#b45309;
+    --warn-soft:#fffbeb;
+    --blue:#1d4ed8;
+    --blue-soft:#eff6ff;
+    --say:#f0fdfa;
+  }
+  *{box-sizing:border-box;}
+  html{font-size:10.5pt;}
+  body{
+    margin:0;background:#e9edf1;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif;
+    line-height:1.65;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  .manual{
+    width:210mm;max-width:100%;margin:22px auto;background:#fff;
+    padding:18mm 17mm 16mm;box-shadow:0 12px 40px rgba(15,23,42,.12);
+  }
+  .print-bar{position:fixed;right:20px;bottom:20px;z-index:20;}
+  .print-bar button{
+    border:0;border-radius:999px;background:var(--accent);color:#fff;
+    padding:10px 18px;font-size:13px;cursor:pointer;
+    box-shadow:0 6px 18px rgba(15,118,110,.28);
+  }
+  .cover{
+    min-height:252mm;display:block;position:relative;
+    page-break-after:always;break-after:page;
+    border-top:7px solid var(--accent);padding-top:15mm;
+  }
+  .brand{display:flex;align-items:center;gap:10px;color:var(--accent);font-weight:700;letter-spacing:.04em;}
+  .brand-mark{width:30px;height:30px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;font-weight:800;}
+  .kicker{font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-top:30mm;}
+  .cover h1{font-size:35pt;line-height:1.18;letter-spacing:-.02em;margin:8mm 0 5mm;font-weight:800;color:#111827;}
+  .cover h1 span{color:var(--accent);}
+  .cover .sub{font-size:16pt;color:#344054;margin:0 0 4mm;font-weight:600;}
+  .cover .lead{font-size:11pt;color:var(--muted);max-width:158mm;margin:0;}
+  .cover-meta{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:3mm;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:5mm 0;margin-top:12mm;
+  }
+  .cover-meta div{font-size:9.5pt;color:var(--muted);}
+  .cover-meta strong{display:block;color:var(--ink);font-size:11pt;margin-bottom:1mm;}
+  .cover-bottom{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:end;color:var(--muted);font-size:9pt;}
+  .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin:8mm 0 0;}
+  .quick div{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:3.5mm;}
+  .quick b{display:block;color:var(--accent);font-size:17pt;line-height:1.1;margin-bottom:1mm;}
+  .quick span{font-size:9pt;color:var(--muted);}
+
+  .section{page-break-before:always;break-before:page;}
+  .section.first{page-break-before:always;break-before:page;}
+  .section-head{display:flex;align-items:flex-start;gap:4mm;border-bottom:2px solid var(--accent);padding-bottom:3mm;margin-bottom:6mm;}
+  .section-num{font-size:22pt;font-weight:800;color:var(--accent);line-height:1;min-width:14mm;}
+  .section-head h2{font-size:19pt;line-height:1.25;margin:0;font-weight:700;color:#111827;}
+  .section-head p{margin:1mm 0 0;color:var(--muted);font-size:9.5pt;}
+  h3{font-size:13.5pt;margin:7mm 0 2.5mm;color:#111827;border-left:3px solid var(--accent);padding-left:2.5mm;}
+  h4{font-size:11pt;margin:5mm 0 1.5mm;color:#24303f;}
+  p{margin:0 0 2.5mm;}
+  ul,ol{margin:0 0 3mm;padding-left:5.5mm;}
+  li{margin:0 0 1.3mm;}
+  .muted{color:var(--muted);}
+  .small{font-size:9pt;}
+  a{color:var(--blue);text-decoration:none;word-break:break-all;}
+
+  .callout{
+    border:1px solid var(--line);border-left:4px solid var(--accent);
+    background:var(--accent-soft);border-radius:5px;
+    padding:3.5mm 4mm;margin:4mm 0;page-break-inside:avoid;
+  }
+  .callout.warn{background:var(--warn-soft);border-left-color:var(--warn);}
+  .callout.blue{background:var(--blue-soft);border-left-color:var(--blue);}
+  .callout b{color:var(--accent-dark);}
+  .callout.warn b{color:var(--warn);}
+  .callout p:last-child{margin-bottom:0;}
+
+  .steps{display:grid;gap:3mm;margin:4mm 0;}
+  .step{
+    display:grid;grid-template-columns:11mm 1fr;gap:3mm;
+    border:1px solid var(--line);border-radius:6px;padding:3.5mm 4mm;
+    background:#fff;page-break-inside:avoid;
+  }
+  .step .n{width:9mm;height:9mm;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:12pt;}
+  .step h4{margin:0 0 1mm;font-size:11pt;}
+  .step p{margin:0;color:var(--muted);font-size:9.5pt;}
+
+  .say{
+    border:1px solid #b7e4d8;background:var(--say);border-radius:8px;
+    padding:3.5mm 4mm;margin:3.5mm 0 4mm;page-break-inside:avoid;
+    position:relative;
+  }
+  .say .who{
+    display:inline-block;background:var(--accent);color:#fff;border-radius:999px;
+    padding:.8mm 2.8mm;font-size:8.5pt;font-weight:700;margin-bottom:2mm;
+  }
+  .say p{margin:0;font-size:10.5pt;color:#134e4a;}
+  .say p + p{margin-top:1.5mm;}
+  .say .hint{font-size:8.5pt;color:var(--muted);margin-top:2mm;}
+
+  .path{display:flex;flex-wrap:wrap;align-items:center;gap:2mm;background:var(--soft);border:1px dashed var(--line);border-radius:6px;padding:3.5mm;margin:3.5mm 0;font-size:9.5pt;}
+  .path span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:1.5mm 3mm;white-space:nowrap;}
+  .path em{color:var(--accent);font-style:normal;font-weight:700;}
+
+  figure{margin:4mm 0 5mm;page-break-inside:avoid;}
+  figure img{display:block;width:100%;height:auto;border:1px solid #cfd6dd;border-radius:4px;background:#fff;}
+  figure.small img{width:auto;max-width:100%;max-height:55mm;}
+  figcaption{font-size:8.5pt;color:var(--muted);margin-top:1.5mm;line-height:1.45;}
+  figcaption b{color:var(--ink);}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:4mm;}
+  .card{border:1px solid var(--line);border-radius:6px;padding:4mm;background:#fff;page-break-inside:avoid;}
+  .card h4{margin-top:0;}
+  .card p:last-child,.card ul:last-child{margin-bottom:0;}
+
+  table{width:100%;border-collapse:collapse;margin:3mm 0 4mm;font-size:9pt;page-break-inside:avoid;}
+  th,td{border:1px solid var(--line);padding:2.2mm 2.5mm;vertical-align:top;text-align:left;}
+  th{background:var(--soft);font-weight:600;color:#24303f;}
+  td code,p code,li code{
+    background:#f3f5f7;border:1px solid #e1e5e9;border-radius:3px;padding:0 1mm;
+    font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-size:.9em;word-break:break-word;
+  }
+
+  .toc{display:grid;grid-template-columns:1fr 1fr;gap:2mm 8mm;margin-top:5mm;}
+  .toc a{display:flex;justify-content:space-between;gap:3mm;border-bottom:1px dotted var(--line);padding:1.5mm 0;color:var(--ink);font-size:9.5pt;}
+  .toc a span:first-child{color:var(--accent);font-weight:700;min-width:8mm;}
+
+  .schematic{border:1px solid #cfd6dd;border-radius:6px;overflow:hidden;margin:3.5mm 0 5mm;page-break-inside:avoid;font-size:9pt;background:#fff;}
+  .schematic-head{background:#f0f3f5;border-bottom:1px solid var(--line);padding:2.5mm 3.5mm;font-weight:700;color:#24303f;}
+  .schematic-body{padding:4mm;}
+  .schematic-row{display:flex;gap:2mm;align-items:center;margin-bottom:2.5mm;}
+  .schematic-input{flex:1;border:1px solid #cfd6dd;border-radius:4px;padding:2mm 2.5mm;color:#98a2b3;background:#fff;}
+  .schematic-btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:4px;padding:2mm 4mm;}
+  .schematic-table{width:100%;border-collapse:collapse;font-size:8.7pt;margin-top:2mm;}
+  .schematic-table td{border-top:1px solid var(--line);padding:2mm 1mm;color:var(--muted);}
+  .badge{display:inline-block;border-radius:999px;background:var(--accent-soft);color:var(--accent-dark);padding:.6mm 2mm;font-size:8pt;font-weight:600;}
+
+  .footer-note{border-top:1px solid var(--line);margin-top:7mm;padding-top:3mm;color:var(--muted);font-size:8.5pt;}
+
+  @media print{
+    @page{size:A4;margin:15mm 14mm 16mm;}
+    body{background:#fff;}
+    .manual{width:auto;max-width:none;margin:0;padding:0;box-shadow:none;}
+    .print-bar{display:none;}
+    .section{page-break-before:always;break-before:page;}
+    .cover{min-height:255mm;height:255mm;page-break-after:always;break-after:page;padding-top:10mm;}
+    a{color:var(--ink);text-decoration:none;}
+  }
+  @media screen and (max-width:760px){
+    .manual{padding:18px 16px;}
+    .cover h1{font-size:27pt;}
+    .grid2,.toc,.quick{grid-template-columns:1fr;}
+    .cover-meta{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="print-bar"><button onclick="window.print()">打印 / 导出 A4 PDF</button></div>
+
+<main class="manual">
+
+<!-- COVER -->
+<section class="cover">
+  <div>
+    <div class="brand"><span class="brand-mark">T</span><span>TransWeb · Agent Skill</span></div>
+    <div class="kicker">User Guide / 2026.11</div>
+    <h1>transweb-ai<br><span>使用说明书</span></h1>
+    <p class="sub">不用记命令：把任务交给 AI</p>
+    <p class="lead">你只需要会三件事：打开网页、复制 API Key、把需求告诉 AI。安装、配置、调用和排错，全部由 AI 代你完成。</p>
+    <div class="cover-meta">
+      <div><strong>适用版本</strong>transweb-ai 1.2.3</div>
+      <div><strong>适合对象</strong>第一次使用 AI 技能的非技术用户</div>
+      <div><strong>文档版本</strong>v2.0 · 2026-11-17</div>
+    </div>
+    <div class="quick">
+      <div><b>0</b><span>需要你手敲的命令</span></div>
+      <div><b>3</b><span>你只需完成的动作</span></div>
+      <div><b>5 min</b><span>从登录到可用</span></div>
+      <div><b>1</b><span>对 AI 说一句话就能开始</span></div>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <span>transweb.cn · Browser-native AI workforce</span>
+    <span>非技术用户版 / 可打印</span>
+  </div>
+</section>
+
+<!-- 00 -->
+<section class="section first">
+  <div class="section-head">
+    <div class="section-num">00</div>
+    <div><h2>你只需要做三件事</h2><p>不需要打开终端，不需要输入命令。把“技术动作”交给 AI。</p></div>
+  </div>
+
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div><h4>在网页上创建 API Key</h4><p>登录 transweb.cn，在右上角账号菜单里创建并复制 Key。这是唯一需要你手动点击的步骤。</p></div></div>
+    <div class="step"><div class="n">2</div><div><h4>把 Key 交给 AI，让它配置</h4><p>对 AI 说：“请帮我配置 transweb-ai 的 API Key。”然后把 Key 粘贴给它；AI 会保存到本机，不会让你敲命令。</p></div></div>
+    <div class="step"><div class="n">3</div><div><h4>直接对 AI 说需求</h4><p>“请列出我的应用”“请用某个技能处理这份资料”“请做一份 PPT”。AI 会调用技能并交回结果。</p></div></div>
+  </div>
+
+  <div class="callout blue">
+    <p><b>全文约定：</b>所有绿色“对 AI 说”框里的文字，都是让你复制/转述给 AI 助手的话，不是终端命令，也不需要你理解技术细节。</p>
+  </div>
+
+  <h3>目录</h3>
+  <div class="toc">
+    <a href="#s1"><span>01</span><span>AI 会替你做什么</span></a>
+    <a href="#s2"><span>02</span><span>开始前准备</span></a>
+    <a href="#s3"><span>03</span><span>创建 API Key</span></a>
+    <a href="#s4"><span>04</span><span>让 AI 配置 Key</span></a>
+    <a href="#s5"><span>05</span><span>让 AI 检查是否可用</span></a>
+    <a href="#s6"><span>06</span><span>让 AI 开始工作</span></a>
+    <a href="#s7"><span>07</span><span>安全注意事项</span></a>
+    <a href="#s8"><span>08</span><span>常用对话模板</span></a>
+  </div>
+
+  <div class="callout warn">
+    <p><b>最重要的一句话：</b>API Key 只在创建时完整显示一次。复制后立刻保存；不要发到群聊、公开网页或截图里。</p>
+  </div>
+</section>
+
+<!-- 01 -->
+<section class="section" id="s1">
+  <div class="section-head">
+    <div class="section-num">01</div>
+    <div><h2>AI 会替你做什么</h2><p>你负责“说清楚要什么”，AI 负责“把技能跑起来”。</p></div>
+  </div>
+
+  <p><strong>transweb-ai</strong> 是一个装在 AI 助手里的技能。它让 AI 能够读取你 transweb.cn 账号下的应用，并代你执行任务。</p>
+
+  <table>
+    <thead><tr><th>你对 AI 说</th><th>AI 会做什么</th><th>你会得到</th></tr></thead>
+    <tbody>
+      <tr><td>“帮我配置 transweb-ai 的 Key”</td><td>保存 Key 到本机、检查技能是否完整</td><td>配置成功/失败说明</td></tr>
+      <tr><td>“列出我账号里的 AI 应用”</td><td>读取你的应用清单</td><td>应用名称、类型、ID</td></tr>
+      <tr><td>“用这个应用处理这份资料”</td><td>调用对应 Agent/Skill</td><td>回答文字，或结果链接</td></tr>
+      <tr><td>“帮我做一份 PPT”</td><td>调用演示文稿应用</td><td>网页版 PPT 链接</td></tr>
+      <tr><td>“先演示，不要真的执行”</td><td>离线预览工作流</td><td>示例结果，不扣积分</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Agent 与 Skill 的差别</h3>
+  <div class="grid2">
+    <div class="card">
+      <h4>Agent：给你一段回答</h4>
+      <p>像聊天一样提问，AI 返回文字。适合问答、教练、排障、顾问。</p>
+    </div>
+    <div class="card">
+      <h4>Skill：给你一个结果链接</h4>
+      <p>按固定格式处理任务，结果会归档到网页。适合总结、提取、报告、PPT。</p>
+    </div>
+  </div>
+
+  <h3>它默认能做什么</h3>
+  <ul>
+    <li>生成网页版 PPT</li>
+    <li>生成可视化图表</li>
+    <li>生成 3D 手办建模</li>
+    <li>生成 3D 动画</li>
+    <li>生成小游戏</li>
+  </ul>
+  <p class="muted small">安装 transweb-create 后，还可以让 AI 把资料变成新的 Agent、把需求变成新的 Skill，持续扩展你的个人工具集。</p>
+
+  <figure>
+    <img src="manual-assets/home.png" alt="transweb.cn 首页实际截图" />
+    <figcaption><b>图 1</b>：transweb.cn 首页（2026-11-17 实际截图）。右上角绿色按钮是登录入口。</figcaption>
+  </figure>
+</section>
+
+<!-- 02 -->
+<section class="section" id="s2">
+  <div class="section-head">
+    <div class="section-num">02</div>
+    <div><h2>开始前准备</h2><p>你不需要懂 Python，也不需要打开终端。</p></div>
+  </div>
+
+  <table>
+    <thead><tr><th>你需要有</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>一个浏览器</td><td>Chrome、Edge、Safari 均可，能打开 transweb.cn。</td></tr>
+      <tr><td>一个 transweb.cn 账号</td><td>没有就现场注册；登录后才能创建 API Key。</td></tr>
+      <tr><td>一个 AI 助手</td><td>已经安装 transweb-ai 技能的客户端，例如 Claude Code、OpenClaw、DSH 等。</td></tr>
+      <tr><td>技能已安装</td><td>你的 AI 助手能识别“transweb-ai”这个技能；不会安装也没关系，直接让 AI 帮你安装。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请帮我安装 transweb-ai 技能。如果已经安装，请检查它是否完整、能否正常使用。</p>
+    <p class="hint">AI 会自行处理安装、目录和依赖；你不需要输入任何命令。</p>
+  </div>
+
+  <h3>你不需要做的事</h3>
+  <ul>
+    <li>不需要学习命令行、Python 或配置文件格式；</li>
+    <li>不需要记住应用 ID，AI 会帮你查；</li>
+    <li>不需要手动改 JSON；</li>
+    <li>不需要自己排查网络错误，把报错转给 AI 即可。</li>
+  </ul>
+</section>
+
+<!-- 03 -->
+<section class="section" id="s3">
+  <div class="section-head">
+    <div class="section-num">03</div>
+    <div><h2>创建 API Key（唯一需要点击的步骤）</h2><p>Key 是你账号的“通行证”。跟着页面点即可。</p></div>
+  </div>
+
+  <figure class="small">
+    <img src="manual-assets/login-entry.png" alt="transweb.cn 首页右上角登录入口" />
+    <figcaption><b>图 2</b>：首页右上角“登录 / 注册”入口（实际截图裁切）。</figcaption>
+  </figure>
+
+  <h3>第 1 步：登录网站</h3>
+  <p>在浏览器打开 <a href="https://transweb.cn/">https://transweb.cn/</a>，点击右上角 <strong>登录 / 注册</strong>，按页面提示完成登录或注册。</p>
+
+  <h3>第 2 步：找到 API Key 管理</h3>
+  <p>登录后，在页面右上角找到你的账号入口（头像、用户名或菜单），展开后找到 <strong>API Key</strong>，点击 <strong>管理</strong>。</p>
+  <div class="path">
+    <span>登录 / 注册</span><em>→</em><span>右上角账号菜单</span><em>→</em><span>API Key</span><em>→</em><span>管理</span><em>→</em><span>添加</span>
+  </div>
+
+  <h3>第 3 步：创建并复制</h3>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div><h4>输入一个名字</h4><p>例如“我的电脑”或“transweb-ai”，只是帮助区分，不是密码。</p></div></div>
+    <div class="step"><div class="n">2</div><div><h4>点击“添加”</h4><p>平台会生成 Key。网页创建的 Key 默认带读取应用和调用 AI 的权限。</p></div></div>
+    <div class="step"><div class="n">3</div><div><h4>立刻复制</h4><p>完整 Key 以 <code>ak_live_</code> 开头，只在创建时显示一次；关掉就看不到了。</p></div></div>
+  </div>
+
+  <p class="small muted">下图是登录后 API Key 面板的<strong>脱敏界面示意</strong>，仅用于说明按钮和字段位置；真实 Key 不会出现在本文档中。</p>
+  <div class="schematic">
+    <div class="schematic-head">API Key&nbsp;&nbsp;·&nbsp;&nbsp;管理</div>
+    <div class="schematic-body">
+      <div class="schematic-row">
+        <div class="schematic-input">输入 Key 名称，例如 我的电脑</div>
+        <div class="schematic-btn">添加</div>
+      </div>
+      <table class="schematic-table">
+        <tr><td><strong>我的电脑</strong><br><span class="muted">ak_live_••••••••••••</span></td><td>2026-11-17</td><td><span class="badge">复制</span>&nbsp; 删除</td></tr>
+        <tr><td><strong>工作电脑</strong><br><span class="muted">ak_live_••••••••••••</span></td><td>2026-11-10</td><td><span class="badge">复制</span>&nbsp; 删除</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3>第 4 步：妥善保存</h3>
+  <ul>
+    <li>粘贴到密码管理器，或只保存在自己电脑的安全位置；</li>
+    <li>不要发到微信群、公开网页、GitHub、截图；</li>
+    <li>不要手动加空格、换行或引号；</li>
+    <li>如果丢了，重新生成一个即可，旧 Key 会立即失效。</li>
+  </ul>
+
+  <div class="callout warn">
+    <p><b>为什么 AI 可能说“缺少 account:read”？</b></p>
+    <p>网页创建的 Key 通常没有“读取账号资料”的权限。这不影响列出应用、执行技能和做 PPT；让 AI 跳过“账号信息验证”，直接测试实际功能即可。</p>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="section" id="s4">
+  <div class="section-head">
+    <div class="section-num">04</div>
+    <div><h2>让 AI 配置 Key</h2><p>你只需要把 Key 交给 AI；保存和检查由 AI 完成。</p></div>
+  </div>
+
+  <h3>第 1 句：告诉 AI 要配置</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请使用 transweb-ai 技能，帮我配置 transweb.cn 的 API Key。</p>
+    <p>我会把 Key 粘贴给你。请把它保存在本机配置中，不要在回复里显示完整 Key，也不要把 Key 写进任何文件、日志或截图。</p>
+  </div>
+
+  <h3>第 2 句：粘贴 Key</h3>
+  <p>AI 可能会让你粘贴 Key。复制完整的 <code>ak_live_...</code>，直接粘贴到对话里发送即可。</p>
+
+  <div class="callout">
+    <p><b>安全提醒：</b>只在私人的 AI 对话里粘贴 Key；不要在群聊、公开论坛、工单系统或录屏中粘贴。配置完成后，让 AI 不要再重复显示它。</p>
+  </div>
+
+  <h3>第 3 句：让 AI 验证</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请检查 transweb-ai 是否配置成功，并列出我账号里最近的 5 个 AI 应用。</p>
+    <p>如果提示缺少 account:read，请跳过账号资料验证，直接确认“列出应用”能不能正常工作。</p>
+  </div>
+
+  <h3>如果 AI 问你“用哪个环境/怎么装”</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请按 transweb-ai 技能的默认方式处理，不需要我手动输入命令。遇到需要我确认的步骤，请用一句话告诉我该点哪里或该把什么发给你。</p>
+  </div>
+
+  <h3>多账号或换一个 Key</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请帮我新建一个名为 work 的配置，使用我接下来提供的另一个 API Key；配置好后切换到 work，并保留原来的默认配置。</p>
+  </div>
+
+  <h3>切换服务地址（一般用户可跳过）</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请把 transweb-ai 的服务地址临时切换到我指定的地址，并用一个只读操作验证；验证后恢复原来的地址。</p>
+  </div>
+
+  <div class="callout blue">
+    <p><b>你不需要知道：</b>配置文件在哪里、用了什么命令、Key 怎么加密。AI 会在本机完成，并在回复里只告诉你“成功/失败”和下一步。</p>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="section" id="s5">
+  <div class="section-head">
+    <div class="section-num">05</div>
+    <div><h2>让 AI 检查是否可用</h2><p>不用看懂日志；让 AI 自己自检并汇报。</p></div>
+  </div>
+
+  <h3>第 1 句：离线自检</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请运行 transweb-ai 的离线自检，确认技能文件、版本、依赖和密钥安全都没有问题，然后用一句话告诉我结果。</p>
+  </div>
+
+  <h3>第 2 句：真实列一次应用</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请列出我账号里最近的 5 个应用，并告诉我每个应用是 Agent、Skill，还是旧版未标注类型。</p>
+  </div>
+  <p>如果能列出应用，说明 Key 已经生效。</p>
+
+  <h3>遇到问题时，把这段发给 AI</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>我在使用 transweb-ai 时遇到下面的提示。请不要只让我自己敲命令：先解释原因，再直接帮我修复；如果需要我操作，请用非技术语言告诉我点哪里。</p>
+    <p>报错原文：</p>
+    <p>“把报错粘贴在这里”</p>
+  </div>
+
+  <table>
+    <thead><tr><th>你看到的现象</th><th>大概率原因</th><th>你可以对 AI 说</th></tr></thead>
+    <tbody>
+      <tr><td>“请先登录账号”</td><td>Key 失效、复制不完整或已撤销</td><td>“Key 可能失效了，请带我重新创建并替换，旧 Key 作废。”</td></tr>
+      <tr><td>“缺少 scope”</td><td>Key 没有 account:read，通常不影响主要功能</td><td>“请跳过账号资料验证，直接测试列出应用和做 PPT。”</td></tr>
+      <tr><td>“积分不足”</td><td>账号余额低</td><td>“请先做离线演示，不要真实调用；再告诉我需要多少积分。”</td></tr>
+      <tr><td>“找不到结果存档”</td><td>生成结果归档延迟</td><td>“请等待后重试，不要重复生成，避免重复扣费。”</td></tr>
+      <tr><td>“接口不存在”</td><td>服务地址不对</td><td>“请检查服务地址，必要时恢复官方地址后重试。”</td></tr>
+      <tr><td>AI 一直让你自己敲命令</td><td>AI 没有按“代你操作”的方式工作</td><td>“请直接代我执行，不要让我手敲命令；需要确认时用中文问我。”</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 06 -->
+<section class="section" id="s6">
+  <div class="section-head">
+    <div class="section-num">06</div>
+    <div><h2>让 AI 开始工作</h2><p>从“找应用”到“做 PPT”，都只需要一句话。</p></div>
+  </div>
+
+  <h3>列出应用</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请用 transweb-ai 列出我账号里最近使用的 10 个应用，按 Agent、Skill 分类，并告诉我每个应用适合做什么。</p>
+  </div>
+
+  <h3>执行一个应用</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请找一个适合“把会议记录整理成待办”的 Skill，用我下面这段会议记录执行，并把结果链接发给我：</p>
+    <p>“粘贴会议记录……”</p>
+  </div>
+  <p class="muted small">如果应用是 Agent，AI 会直接给你回答文字；如果是 Skill，AI 会给你一个结果链接。</p>
+
+  <h3>生成 PPT</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请用 transweb-ai 帮我做一份 PPT，主题是“TransWeb 入门指南”，面向第一次使用的同事，12 页左右，每页 3—5 个要点，最后给我网页版链接。</p>
+  </div>
+
+  <h3>先预览，避免花积分</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>请先用离线演示模式展示你会怎么完成，不要真实调用、不要扣积分；我确认后，再执行真实版本。</p>
+  </div>
+
+  <figure>
+    <img src="manual-assets/skill-hub.png" alt="TransWeb Skill 广场实际截图" />
+    <figcaption><b>图 3</b>：Skill 广场（实际截图）。AI 可以在这里帮你找适合的应用。</figcaption>
+  </figure>
+
+  <figure>
+    <img src="manual-assets/skill-input.png" alt="演示文稿 Skill 输入页实际截图" />
+    <figcaption><b>图 4</b>：演示文稿 Skill 的输入区（实际截图）。你只需要告诉 AI 主题和要点。</figcaption>
+  </figure>
+</section>
+
+<!-- 07 -->
+<section class="section" id="s7">
+  <div class="section-head">
+    <div class="section-num">07</div>
+    <div><h2>安全注意事项</h2><p>Key 是账号的钥匙，不是普通文本。</p></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>一定要做</h4>
+      <ul>
+        <li>只把 Key 发给私人的 AI 对话；</li>
+        <li>让 AI 保存到本机，不要在回复里显示完整 Key；</li>
+        <li>不同设备/团队用不同 Key；</li>
+        <li>不用时删除或轮换；</li>
+        <li>公开结果前检查是否含敏感信息。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>一定不要</h4>
+      <ul>
+        <li>不要发到微信群、公开网页、GitHub；</li>
+        <li>不要用共享账号做自动化；</li>
+        <li>不要把 Key 写进截图、录屏、PPT；</li>
+        <li>不要把“未公开”当作绝对保密；</li>
+        <li>不要在不明网站粘贴 Key。</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>怀疑 Key 泄露怎么办</h3>
+  <div class="say">
+    <span class="who">对 AI 说</span>
+    <p>我怀疑 API Key 泄露了。请带我完成：作废旧 Key、创建新 Key、替换本地配置，并检查最近的调用和积分消费。</p>
+  </div>
+
+  <h3>生成结果可以公开吗？</h3>
+  <p>AI 生成的 PPT/结果链接可能可以被拿到链接的人打开。对外分享前，先让 AI 检查内容里有没有内部数据、个人信息或不该公开的材料。</p>
+
+  <div class="callout">
+    <p><b>你不需要自己判断技术风险：</b>把“这个链接能公开吗”“这段内容能发出去吗”直接问 AI，让它先做一次敏感信息检查。</p>
+  </div>
+</section>
+
+<!-- 08 -->
+<section class="section" id="s8">
+  <div class="section-head">
+    <div class="section-num">08</div>
+    <div><h2>常用对话模板</h2><p>复制下面任意一段，把括号内容换成你的实际情况。</p></div>
+  </div>
+
+  <div class="say">
+    <span class="who">安装</span>
+    <p>请帮我安装并检查 transweb-ai 技能。不要让我手动敲命令；需要我确认时，用中文告诉我下一步。</p>
+  </div>
+
+  <div class="say">
+    <span class="who">配置</span>
+    <p>请使用 transweb-ai 技能，帮我配置 transweb.cn API Key。我会把 Key 粘贴给你；请保存在本机，不要在回复中显示完整 Key。</p>
+  </div>
+
+  <div class="say">
+    <span class="who">验证</span>
+    <p>请检查 transweb-ai 是否可用，并列出我账号里最近的 5 个应用。若提示缺少 account:read，请跳过账号资料验证，直接测试实际功能。</p>
+  </div>
+
+  <div class="say">
+    <span class="who">列应用</span>
+    <p>请列出我账号里所有 Agent 和 Skill，按类型分组，并告诉我每个应用适合什么任务。</p>
+  </div>
+
+  <div class="say">
+    <span class="who">做 PPT</span>
+    <p>请用 transweb-ai 帮我做一份关于（主题）的 PPT，面向（听众），约（页数）页，每页 3—5 个要点，最后给我网页版链接。</p>
+  </div>
+
+  <div class="say">
+    <span class="who">处理资料</span>
+    <p>请找一个适合（任务）的 Skill，用我提供的资料执行，并给出结果链接；如果找不到合适应用，请告诉我并建议我怎么创建。</p>
+  </div>
+
+  <div class="say">
+    <span class="who">先预览</span>
+    <p>请先离线演示你会怎么做，不要真实调用、不要扣积分；我确认后再执行真实版本。</p>
+  </div>
+
+  <div class="say">
+    <span class="who">排错</span>
+    <p>我遇到这个报错：“（粘贴报错）”。请解释原因并直接帮我修复；不要只给我命令，需要我操作时用非技术语言说明。</p>
+  </div>
+
+  <div class="say">
+    <span class="who">安全检查</span>
+    <p>请检查这段内容/这个链接是否可以公开分享，指出可能的个人信息、内部数据或敏感信息，并给出脱敏建议。</p>
+  </div>
+
+  <div class="footer-note">
+    <p>本手册用于 transweb-ai 1.2.3 的非技术用户培训。首页、登录入口、Skill 广场、演示文稿输入页为 2026-11-17 实际访问截图；API Key 面板为脱敏界面示意，实际字段以登录后版本为准。文中不包含任何真实 API Key，也不要求读者手敲终端命令。</p>
+  </div>
+</section>
+
+</main>
+</body>
+</html>
