@@ -33,8 +33,8 @@ This repository contains two installable skills and a beginner-friendly manual. 
 ### skills.sh
 
 ```bash
-npx skills add <owner>/transweb-skills --skill transweb-ai
-npx skills add <owner>/transweb-skills --skill transweb-create
+npx skills add liuwenjin/transweb-skills --skill transweb-ai
+npx skills add liuwenjin/transweb-skills --skill transweb-create
 ```
 
 ### ClawHub / OpenClaw
